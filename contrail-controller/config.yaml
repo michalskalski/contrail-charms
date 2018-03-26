@@ -57,3 +57,9 @@ options:
     description: |
       Defines how much flow records will be exported by vRouter agent
       to the Contrail Collector when a flow is created or deleted.
+  sandesh-limit:
+    type: string
+    default: "0"
+    description: |
+      Throttle system logs transmitted per second.
+      By default sending logs disabled (0) to mimic Contrail defaults.

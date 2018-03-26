@@ -57,3 +57,9 @@ options:
     description: |
       Log level for contrail services. Valid values are:
       SYS_EMERG, SYS_ALERT, SYS_CRIT, SYS_ERR, SYS_WARN, SYS_NOTICE, SYS_INFO, SYS_DEBUG
+  sandesh-limit:
+    type: string
+    default: "0"
+    description: |
+      Throttle system logs transmitted per second.
+      By default sending logs disabled (0) to mimic Contrail defaults.

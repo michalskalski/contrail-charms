@@ -251,6 +251,7 @@ def get_context():
     ctx = {}
     ctx["ssl_enabled"] = config.get("ssl_enabled", False)
     ctx["log_level"] = config.get("log-level", "SYS_NOTICE")
+    ctx["sandesh_limit"] = config.get("sandesh-limit", "0")
 
     ip, port = get_controller_address()
     ctx["api_server"] = ip
