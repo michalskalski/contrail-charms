@@ -69,6 +69,14 @@ services:
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
+  heat:
+    charm: cs:xenial/heat
+    options:
+      debug: true
+      openstack-origin: cloud:xenial-newton
+      vip: 192.168.206.246
+    num_units: 3
+    to: [ "lxd:1", "lxd:2", "lxd:3" ]
   nova-compute:
     charm: cs:xenial/nova-compute
     options:
@@ -105,6 +113,11 @@ services:
     options:
       cluster_count: 3
     num_units: 0
+  heat-hacluster:
+    charm: cs:xenial/hacluster
+    options:
+      cluster_count: 3
+    num_units: 0
   contrail-openstack:
     charm: ./contrail-openstack
     series: xenial
@@ -134,6 +147,33 @@ services:
         - "deb http://192.168.1.1:8080/newton/3065 /"
   contrail-agent:
     charm: ./contrail-agent
+    num_units: 0
+    series: xenial
+    options:
+      install-keys: |
+        - |
+          -----BEGIN PGP PUBLIC KEY BLOCK-----
+          Version: GnuPG v1
+
+          mQENBFZDkpsBCAC+T+UOOLUky331HZk8RbfF7mQ35nwH1PGl2vHM6RWdqayLK4aV
+          1uUNGzI3UJw0YVCMmqJSlNfU58GhxEZ/cRbVjnZ6ebAIWRGepsMYWDlA960ornnL
+          VCRbr6yvHU06MSS8yl0X43QL2yGdBRiC5EAPEAawDOTMk0RxJ1AvMDHmnKommoQG
+          MWJ5zKL+fYSiNEPxQ2/nYd2jVXK4a1jP8c4LcvMdo8uxrEHklr/81wX+UKZYzuZP
+          bWQmiXiZzhQD2qz7IgZDaBKVEH4b2xMjilaPc2JOH0hHdP0M33PUOvCbpXQAYOok
+          kzqFpglZq1mZmM1ba6x37E07YpOvNWN0kE9DABEBAAG0CENvbnRyYWlsiQE4BBMB
+          AgAiBQJWQ5KbAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBmWWjLMSv5
+          wDrYB/4nMGcDVFRGU4tvIykhu/l6J6uNunpACL5HrdxC93PrThB2EgJXgnPpE/O+
+          KtjN2JKkSs4ehQy0wRMHc1eM/pQ1GRw4QV6vxO1FPT+y8BMdYkuwqd3uM22wg9mZ
+          yKvLtWBhMEu9nAPsTSVaT7Yw1z319Nr7JP+0mRCmlkLjuQUF2RcMwH59XH+8Lpev
+          MJEGdDcwWifPiO83ycBTQ760miz4B4inUWLYZ11lW/tXRSNG+o4QjemF5mWbPO+H
+          knwC/9eukDath9q7itLbJsDbam0/2KCTPxly1sk6E9hCNSIxlNT6ZnnnorLUoSqH
+          cTfEFYBDWmyhtqzHcfqocnBaPZT8
+          =rMS6
+          -----END PGP PUBLIC KEY BLOCK-----
+      install-sources: |
+        - "deb http://192.168.1.1:8080/newton/3065 /"
+  contrail-heat:
+    charm: ./contrail-heat
     num_units: 0
     series: xenial
     options:
@@ -206,6 +246,10 @@ relations:
   - [ "nova-compute", "ntp" ]
   - [ "openstack-dashboard", "keystone" ]
   - [ openstack-dashboard, dashboard-hacluster ]
+  - [ "heat", "mysql" ]
+  - [ "heat", "rabbitmq-server" ]
+  - [ "heat", "keystone" ]
+  - [ "heat", "heat-hacluster" ]
 
   #contrail
   - [ "contrail-keystone-auth", "keystone" ]
@@ -218,6 +262,8 @@ relations:
   - [ "contrail-openstack", "contrail-controller" ]
   - [ "contrail-agent:juju-info", "nova-compute:juju-info" ]
   - [ "contrail-agent", "contrail-controller"]
+  - [ "contrail-heat", "contrail-controller"]
+  - [ "contrail-heat", "heat" ]
 
 machines:
   "1":

@@ -1,0 +1,17 @@
+name: contrail-heat
+summary: Contrail heat resources
+maintainer: Michal Skalski <mskalski@juniper.net>
+description: |
+  Contrail heat resources
+categories:
+  - openstack
+series:
+  - xenial
+  - trusty
+subordinate: true
+requires:
+  juju-info:
+    interface: juju-info
+    scope: container
+  contrail-controller:
+    interface: contrail-controller
